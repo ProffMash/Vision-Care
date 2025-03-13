@@ -54,9 +54,9 @@ const Appointment = () => {
     <section id="appointment" className="py-16 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">Book an Appointment</h2>
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden flex">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
           {/* Left Content */}
-          <div className="w-1/2 p-8 bg-gray-100">
+          <div className="w-full md:w-1/2 p-8 bg-gray-100">
             <h3 className="text-2xl font-bold mb-4">Why Choose Us?</h3>
             <p className="text-gray-600 mb-4">
               At VisionCare, we provide the best eye care services with a team of experienced professionals.
@@ -70,7 +70,7 @@ const Appointment = () => {
           </div>
 
           {/* Right Form */}
-          <div className="w-1/2 p-8">
+          <div className="w-full md:w-1/2 p-8">
             {/* Progress Indicator */}
             <div className="p-6 border-b border-gray-100">
               <div className="flex justify-between items-center">
