@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { createContact } from '../api/contactApi';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     subject: '',
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    // Handle form submission
+    try {
+      await createContact({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message
+      });
+      alert('Contact form submitted successfully!');
+      // Reset form data
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+    } catch (error) {
+      alert('Error submitting contact form. Please try again.');
+    }
   };
 
   return (
@@ -59,6 +77,17 @@ const Contact = () => {
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h3 className="text-xl font-semibold mb-6">Send us a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input

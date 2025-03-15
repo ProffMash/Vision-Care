@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, Check, ChevronRight, User, Phone } from 'lucide-react';
+import { createAppointment } from '../api/AppointmentApi';
 
 const Appointment = () => {
   const [step, setStep] = useState(1);
@@ -20,10 +21,20 @@ const Appointment = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    console.log('Form submitted:', formData);
+    try {
+      await createAppointment({
+        name: formData.fullName,
+        contact: formData.contactNumber,
+        date: formData.date,
+        time: formData.time
+      });
+      setSubmitted(true);
+      alert('Appointment scheduled successfully!');
+    } catch (error) {
+      alert('Error scheduling appointment. Please try again.');
+    }
   };
 
   if (submitted) {
@@ -38,12 +49,6 @@ const Appointment = () => {
             <p className="text-gray-600 mb-8">
               Thank you for choosing VisionCare. We'll contact you shortly to confirm your appointment.
             </p>
-            <button
-              onClick={() => setSubmitted(false)}
-              className="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-200"
-            >
-              Book Another Appointment
-            </button>
           </div>
         </div>
       </section>
@@ -74,14 +79,14 @@ const Appointment = () => {
             {/* Progress Indicator */}
             <div className="p-6 border-b border-gray-100">
               <div className="flex justify-between items-center">
-                {[1, 2, 3].map((num) => (
+                {[1, 2].map((num) => (
                   <div key={num} className={`flex items-center ${step >= num ? 'text-blue-600' : 'text-gray-400'}`}>
                     {step > num ? (
                       <Check size={20} className="shrink-0" />
                     ) : (
                       <span className="font-medium text-sm">{num}</span>
                     )}
-                    {num !== 3 && <ChevronRight size={20} className="mx-2" />}
+                    {num !== 2 && <ChevronRight size={20} className="mx-2" />}
                   </div>
                 ))}
               </div>
@@ -157,18 +162,6 @@ const Appointment = () => {
                 </div>
               )}
 
-              {step === 3 && (
-                <div className="text-center">
-                  <p className="text-lg font-medium mb-6">Review your appointment details:</p>
-                  <div className="space-y-4 text-left max-w-md mx-auto">
-                    <p><strong>Name:</strong> {formData.fullName}</p>
-                    <p><strong>Contact:</strong> {formData.contactNumber}</p>
-                    <p><strong>Date:</strong> {formData.date}</p>
-                    <p><strong>Time:</strong> {formData.time}</p>
-                  </div>
-                </div>
-              )}
-
               {/* Navigation Buttons */}
               <div className="flex justify-between mt-8">
                 {step > 1 && (
@@ -180,7 +173,7 @@ const Appointment = () => {
                     Back
                   </button>
                 )}
-                {step < 3 ? (
+                {step < 2 ? (
                   <button
                     type="button"
                     onClick={nextStep}
